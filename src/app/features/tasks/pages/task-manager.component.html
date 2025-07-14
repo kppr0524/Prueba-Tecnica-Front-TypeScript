@@ -1,0 +1,89 @@
+<div class="container py-5">
+  <h1 class="display-4 fw-bold text-center text-primary mb-3"> Gestor de Tareas</h1>
+  <p class="lead text-center text-muted mb-5">Organiza tu día con eficacia y estilo</p>
+
+  <!-- Stats -->
+<div class="d-flex justify-content-center gap-3 text-center mb-5 flex-nowrap w-100">
+  <div class="flex-fill p-4 rounded-4 bg-light shadow-sm border-start border-5 border-primary">
+    <div class="h3 fw-bold text-primary">{{ pendingTasks() }}</div>
+    <div class="small text-muted">Tareas Pendientes</div>
+  </div>
+  <div class="flex-fill p-4 rounded-4 bg-light shadow-sm border-start border-5 border-success">
+    <div class="h3 fw-bold text-success">{{ completedTasks() }}</div>
+    <div class="small text-muted">Tareas Completadas</div>
+  </div>
+  <div class="flex-fill p-4 rounded-4 bg-light shadow-sm border-start border-5 border-purple">
+    <div class="h3 fw-bold text-purple">{{ tasks().length }}</div>
+    <div class="small text-muted">Total de Tareas</div>
+  </div>
+</div>
+
+  <!-- Add Task Button -->
+  <div class="d-flex justify-content-end mb-4">
+    <button
+      class="btn btn-lg btn-outline-primary d-flex align-items-center shadow-sm"
+      [routerLink]="[{ outlets: { modal: ['task', 'create'] } }]"
+    >
+      <i class="bi bi-plus-lg me-2"></i>
+      Agregar nueva tarea
+    </button>
+  </div>
+
+  <!-- Task List -->
+  <div class="card shadow-lg border-0">
+    <div class="card-body">
+      <h2 class="h5 fw-semibold mb-4 text-secondary"> Lista de tareas</h2>
+
+      <div *ngIf="tasks().length === 0" class="alert alert-warning text-center">
+        No hay tareas registradas aún.
+      </div>
+
+      <div class="list-group">
+        <div
+          *ngFor="let task of tasks()"
+          class="list-group-item list-group-item-action mb-3 rounded-4 border shadow-sm p-3"
+        >
+          <div class="d-flex justify-content-between align-items-start flex-wrap">
+            <div class="d-flex align-items-start gap-3">
+              <input
+                type="checkbox"
+                class="form-check-input mt-2"
+                [checked]="task.completed"
+                (change)="toggleCompleted(task.id)"
+              />
+              <div>
+                <h5
+                  class="mb-1 fw-bold"
+                  [ngClass]="{
+                    'text-decoration-line-through text-muted': task.completed,
+                    'text-dark': !task.completed
+                  }"
+                >
+                  {{ task.title }}
+                </h5>
+                <p class="mb-1 text-muted small">{{ task.description }}</p>
+                <p class="mb-1 text-muted small">
+                  <i class="bi bi-calendar2-check"></i> Prioridad: <strong>{{ task.priority }}</strong>
+                </p>
+              </div>
+            </div>
+            <div class="d-flex flex-column flex-sm-row gap-2 mt-3 mt-sm-0">
+              <button
+                class="btn btn-sm btn-outline-danger"
+                (click)="deleteTask(task.id)"
+              >
+                <i class="bi bi-trash"></i> Eliminar
+              </button>
+              <button
+                class="btn btn-sm btn-outline-primary"
+                [routerLink]="[{ outlets: { modal: ['task', 'edit', task.id] } }]"
+              >
+                <i class="bi bi-pencil-square"></i> Editar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
